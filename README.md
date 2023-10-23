@@ -47,7 +47,7 @@ $ bundle
 |parameter|type|description|default|
 |---|---|---|---|
 |split_key|string (required)|Specify a target key to split||
-|keep_other_key|bool (optional)|Specify a flag whether other key must be kept or not||
+|keep_other_key|bool (optional)|Specify a flag whether other key must be kept or not|`false`|
 |keep_keys|array (optional)|Specify keys to be kept in filtered record|`[]`|
 |remove_keys|array (optional)|Specify keys to be removed in filtered record|`[]`|
 
