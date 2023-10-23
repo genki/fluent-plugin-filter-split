@@ -51,6 +51,42 @@ $ bundle
 |keep_keys|array (optional)|Specify keys to be kept in filtered record|`[]`|
 |remove_keys|array (optional)|Specify keys to be removed in filtered record|`[]`|
 
+## Example
+
+```
+<filter test>
+  @type filter_split
+  split_key target_field
+  keep_other_key true
+</filter>
+```
+
+If following record is passed:
+
+```
+{'foo:'bar', 'target_field':[ {'k1':'v1'}, {'k2':'v2'} ] }
+```
+
+Then, you got:
+
+```
+{'foo:'bar', 'k1':'v1'}
+{'foo:'bar', 'k2':'v2'}
+```
+
+If following record is passed:
+
+```
+{'foo:'bar', 'target_field':[ 'v1', 'v2' ] }
+```
+
+Then, you got:
+
+```
+{'foo:'bar', 'target_field:'v1'}
+{'foo:'bar', 'target_field':'v2'}
+```
+
 ## Copyright
 
 * Copyright(c) 2023- Kentaro Hayashi
