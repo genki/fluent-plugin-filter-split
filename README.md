@@ -83,7 +83,7 @@ If following record is passed:
 Then, you got:
 
 ```
-{'foo:'bar', 'target_field:'v1'}
+{'foo:'bar', 'target_field':'v1'}
 {'foo:'bar', 'target_field':'v2'}
 ```
 
