@@ -109,6 +109,23 @@ class FilterSplitFilterTest < Test::Unit::TestCase
       matched = d.logs.grep(/\[warn\]: failed to split with <target_field> key because the target field is not Array:/)
       assert_equal(1, matched.size)
     end
+
+    test 'split target_field with array of scalar' do
+      d = create_driver %(
+        @type filter_split
+        split_key target_field
+      )
+      d.run(default_tag: 'test') do
+        d.feed(event_time,
+               'other' => 'foo',
+               'target_field' => [ 'v1', 'v2', 'v3'])
+      end
+      assert_equal [
+        [event_time, { 'target_field' => 'v1' }],
+        [event_time, { 'target_field' => 'v2' }],
+        [event_time, { 'target_field' => 'v3' }]
+      ], d.filtered
+    end
   end
 
   sub_test_case 'keep_keys' do

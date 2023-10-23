@@ -69,7 +69,17 @@ module Fluent
             end
 
             record[@split_key].each do |v|
-              v.merge!(keyvalues) unless keyvalues.empty?
+              unless keyvalues.empty?
+                if v.is_a?(Hash)
+                  v.merge!(keyvalues)
+                else
+                  v = {"#{@split_key}": v}.merge(keyvalues)
+                end
+              else
+                unless v.is_a?(Hash)
+                  v = {"#{@split_key}" => v}
+                end
+              end
               new_es.add(time, v)
             end
           rescue => e
