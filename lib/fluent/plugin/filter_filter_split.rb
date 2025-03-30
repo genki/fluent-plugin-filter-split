@@ -33,6 +33,8 @@ module Fluent
       config_param :keep_keys, :array, default: []
       desc 'Specify keys to be removed in filtered record'
       config_param :remove_keys, :array, default: []
+      desc 'Specify prefix for splitted keys'
+      config_param :prefix, :string, default: nil
 
       def configure(conf)
         super
@@ -44,6 +46,9 @@ module Fluent
         end
         if !@keep_other_key && !@remove_keys.empty?
           raise Fluent::ConfigError, 'Cannot set remove_keys when keep_other_key is false.'
+        end
+        if @prefix && !@keep_other_key
+          raise Fluent::ConfigError, 'Cannot set prefix when keep_other_key is false.'
         end
       end
 
@@ -71,6 +76,13 @@ module Fluent
             record[@split_key].each do |v|
               unless keyvalues.empty?
                 if v.is_a?(Hash)
+                  # modify v's key with prefix
+                  if @prefix
+                    v = v.map { |k, v|
+                      key = keyvalues.has_key?(k) ? k : "#{@prefix}#{k}"
+                      [key, v]
+                    }.to_h
+                  end
                   v.merge!(keyvalues)
                 else
                   v = {"#{@split_key}": v}.merge(keyvalues)

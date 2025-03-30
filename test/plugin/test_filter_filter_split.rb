@@ -223,6 +223,26 @@ class FilterSplitFilterTest < Test::Unit::TestCase
     end
   end
 
+  sub_test_case 'keep_other_key_with_prefix' do
+    test 'keep other field' do
+      d = create_driver %(
+        @type filter_split
+        split_key target_field
+        prefix prefix_
+        keep_other_key true
+      )
+      d.run(default_tag: 'test') do
+        d.feed(event_time,
+               'other' => 'foo',
+               'target_field' => TARGET_FIELD_VALUES)
+      end
+      assert_equal [
+        [event_time, {'other' => 'foo', 'prefix_k1' => 'v1' }],
+        [event_time, {'other' => 'foo', 'prefix_k2' => 'v2' }]
+      ], d.filtered
+    end
+  end
+
   private
 
   def create_driver(conf = '')
